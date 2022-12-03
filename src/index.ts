@@ -9,7 +9,7 @@ mongoose
     .connect('mongodb+srv://lucas:qwe12345@cluster0.dlbms.mongodb.net/test')
     .then(() =>{
         const app = express();
-        const port = 3001;
+        const port = process.env.PORT || 3000;
 
         app.use('/uploads', express.static(path.resolve(__dirname, '..', 'uploads')));
         app.use(express.json());
