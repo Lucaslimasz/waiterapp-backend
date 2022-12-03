@@ -21,7 +21,7 @@ export const Product = model('Product', new Schema({
         required: true,
         type: [{
             name: {
-                type: Number,
+                type: String,
                 required: true,
             },
             icon: {
