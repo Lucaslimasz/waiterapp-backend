@@ -4,7 +4,6 @@ import { Order } from '../../models/Order';
 export async function cancelOrder(req: Request, res: Response){
     try {
         const { orderId } = req.params;
-        console.log(orderId);
 
         await Order.findByIdAndDelete(orderId);
 

@@ -1,23 +1,36 @@
 import path from 'node:path';
 import express from 'express';
 import mongoose from 'mongoose';
+import http from 'node:http';
+import { Server } from 'socket.io';
 
 import {router} from './router';
+
+
+const app = express();
+const server = http.createServer(app);
+export const io = new Server(server);
 
 
 mongoose
     .connect('mongodb+srv://lucas:qwe12345@cluster0.dlbms.mongodb.net/test')
     .then(() =>{
-        const app = express();
-        const port = process.env.PORT || 3000;
+        const PORT = process.env.PORT || 3001;
+
+        app.use((req, res, next) => {
+            res.setHeader('Access-Control-Allow-Origin', '*');
+            res.setHeader('Access-Control-Allow-Methods', '*');
+            res.setHeader('Access-Control-Allow-Headers', '*');
+            next();
+        });
 
         app.use('/uploads', express.static(path.resolve(__dirname, '..', 'uploads')));
         app.use(express.json());
         app.use(router);
 
-        app.listen(3001, () => {
-            console.log(`🔥 server is running on port ${port}`);
+        server.listen(PORT, () => {
+            console.log('=================================================');
+            console.log(`| 🚀 Servidor rodando em: http://localhost:${PORT} |`);
+            console.log('=================================================');
         });
-
-    })
-    .catch((err) => console.log('erro ao conectar no mongodb'));
+    }).catch(() => console.log('Erro ao conectar no MongoDB'));
