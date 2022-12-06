@@ -3,6 +3,7 @@ import express from 'express';
 import mongoose from 'mongoose';
 import http from 'node:http';
 import { Server } from 'socket.io';
+import dotenv from 'dotenv';
 
 import {router} from './router';
 
@@ -10,15 +11,16 @@ import {router} from './router';
 const app = express();
 const server = http.createServer(app);
 export const io = new Server(server);
+dotenv.config();
 
 
 mongoose
-    .connect('mongodb+srv://lucas:qwe12345@cluster0.dlbms.mongodb.net/test')
+    .connect(`${process.env.LINK_CONNECTION_MONGODB}`)
     .then(() =>{
         const PORT = process.env.PORT || 3001;
 
         app.use((req, res, next) => {
-            res.setHeader('Access-Control-Allow-Origin', '*');
+            res.setHeader('Access-Control-Allow-Origin', 'http://127.0.0.1:5173');
             res.setHeader('Access-Control-Allow-Methods', '*');
             res.setHeader('Access-Control-Allow-Headers', '*');
             next();
@@ -29,8 +31,6 @@ mongoose
         app.use(router);
 
         server.listen(PORT, () => {
-            console.log('=================================================');
-            console.log(`| 🚀 Servidor rodando em: http://localhost:${PORT} |`);
-            console.log('=================================================');
+            console.log(`🚀 Servidor rodando na porta ${PORT}`);
         });
     }).catch(() => console.log('Erro ao conectar no MongoDB'));
